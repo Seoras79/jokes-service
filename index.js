@@ -37,5 +37,46 @@ app.get('/jokes', async (req, res, next) => {
   }
 });
 
+app.post ('/jokes', async (req, res, next) => {
+  try {
+    const joke = await Joke.create(req.body);
+    res.status(201).send(joke);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+app.delete('/jokes/:id', async (req, res, next) => {
+  try {
+    const joke = await Joke.findByPk(req.params.id);
+    if (joke) {
+      await joke.destroy();
+      res.status(204).send();
+    } else {
+      res.status(404).send();
+    }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+app.put('/jokes/:id', async (req, res, next) => {
+  try {
+    const joke = await Joke.findByPk(req.params.id);
+    if (joke) {
+      await joke.update(req.body);
+      res.status(204).send();
+    } else {
+      res.status(404).send();
+    }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+
 // we export the app, not listening in here, so that we can run tests
 module.exports = app;
